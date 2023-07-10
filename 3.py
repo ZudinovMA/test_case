@@ -13,9 +13,16 @@ class SharedState:
     # функция, модифицирующая состояние сервера
     # asyncio.sleep используется для имитации долгой работы функции
     async def modify(self, value: int):
+        preview_number = None
         await asyncio.sleep(random.randint(1, 2))
+
+        if len(self.items) > 0:
+            preview_number = self.items[-1]
+        if preview_number is not None:
+            while self.items[-1] + 1 != value:
+                await asyncio.sleep(0.001)
+
         self.items.append(value)
-        print(self.items)
 
 
 # Имитация сервера, обрабатывающего запросы
@@ -29,7 +36,6 @@ class Server:
 
     async def handle_request(self, value: int):
         await self.state.modify(value)
-
 
 
 async def main():
